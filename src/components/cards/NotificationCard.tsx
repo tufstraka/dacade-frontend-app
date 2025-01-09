@@ -105,18 +105,48 @@ export default function NotificationCard({ user = {}, notification, extended = f
 
   return (
     <>
-      <div onClick={goToLink} className={`flex hover:bg-secondary py-4 -mx-5 px-5 cursor-pointer ${extended ? "rounded-3xl" : ""}`}>
-        <div className="flex mr-2">
-          <Avatar user={user} size="medium-fixed" className="!w-10 !h-10" />
+      <div onClick={goToLink} className="w-full">
+        <div
+          className={`
+            flex flex-col sm:flex-row
+            hover:bg-secondary
+            py-[0.75rem] sm:py-[1rem]
+            px-[0.75rem] sm:px-[1.25rem]
+            -mx-[0.5rem] sm:-mx-[1.25rem]
+            cursor-pointer
+            transition-colors
+            duration-200
+            ${extended ? "rounded-[1rem] sm:rounded-[1.5rem]" : ""}
+            gap-[0.5rem] sm:gap-[1rem]
+          `}
+        >
+          <div className="flex-shrink-0">
+            <Avatar
+              user={user}
+              className="w-[2rem] h-[2rem] sm:w-[2.5rem] sm:h-[2.5rem]"
+            />
+          </div>
+          <div className="flex flex-col justify-center space-y-[0.25rem]">
+            <span className="text-[0.875rem] sm:text-[1rem] text-gray-700 break-words leading-[1.25]">
+              {notification.message}
+            </span>
+            <span
+              title={date}
+              className="text-[0.75rem] sm:text-[0.875rem] text-gray-900 font-medium leading-[1.2]"
+            >
+              {humanizedDate}
+            </span>
+          </div>
         </div>
-        <div className="pt-1 -mt-2">
-          <span className="block text-base text-gray-700">{notification.message}</span>
-          <span title={date} className="block text-gray-900 font-medium text-sm">
-            {humanizedDate}
-          </span>
-        </div>
+        {notification?.type === "TEAM_INVITE" && (
+          <div className="px-[0.75rem] sm:px-[1.25rem]">
+            <ReplyToInvitation
+              team_ref={notification.metadata?.team}
+              invite_id={notification.metadata?.invite_id as string}
+            />
+          </div>
+        )}
       </div>
-      {notification?.type === "TEAM_INVITE" && <ReplyToInvitation team_ref={notification.metadata?.team} invite_id={notification.metadata?.invite_id as string} />}
     </>
   );
 }
